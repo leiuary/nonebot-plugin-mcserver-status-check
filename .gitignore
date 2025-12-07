@@ -183,3 +183,4 @@ config/
 
 .DS_Store
 junit.xml
+poetry.lock
