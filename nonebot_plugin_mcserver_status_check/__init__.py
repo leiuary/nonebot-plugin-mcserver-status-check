@@ -15,12 +15,13 @@ from .config import Config
 from .checker import generate_mcmotd_image, generate_single_server_image
 
 __plugin_meta__ = PluginMetadata(
-    name="Minecraft Server Status",
+    name="MC服务器状态查询",
     description="一款原版风格、美观高效的 Minecraft 服务器状态查询插件",
     usage="\n".join([
         "指令:",
         "查服",
         "查服 [IP/别名]",
+        "查服列表"
     ]),
     type="application",
     homepage="https://github.com/leiuary/nonebot-plugin-mcserver-status-check",
