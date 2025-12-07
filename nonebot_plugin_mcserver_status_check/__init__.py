@@ -8,7 +8,8 @@ from nonebot import get_plugin_config, on_command
 from nonebot.adapters.onebot.v11 import Message, MessageSegment
 from nonebot.exception import FinishedException
 from nonebot.params import CommandArg
-from nonebot.plugin import Matcher, PluginMetadata
+from nonebot.plugin import PluginMetadata
+from nonebot.matcher import Matcher
 
 from .config import Config
 from .checker import generate_mcmotd_image, generate_single_server_image
@@ -22,7 +23,7 @@ __plugin_meta__ = PluginMetadata(
         "查服 [IP/别名]",
     ]),
     type="application",
-    homepage="https://github.com/leiuary/nonebot-plugin-mcserver-status",
+    homepage="https://github.com/leiuary/nonebot-plugin-mcserver-status-check",
     supported_adapters={"nonebot.adapters.onebot.v11"},
     config=Config,
 )
@@ -31,7 +32,7 @@ __plugin_meta__ = PluginMetadata(
 plugin_config = get_plugin_config(Config)
 
 # Determine command name and aliases
-triggers = plugin_config.mcmotd_command_triggers
+triggers = plugin_config.msc_command_triggers
 cmd_name = triggers[0] if triggers else "查服"
 cmd_aliases: Set[str | tuple[str, ...]] = set(triggers[1:]) if len(triggers) > 1 else set()
 
@@ -46,7 +47,7 @@ async def handle_mcmotd(args: Annotated[Message, CommandArg()]):
         # Single server query
         target_address = arg_text
         # Check if it matches an alias
-        for server in plugin_config.mcmotd_server_list:
+        for server in plugin_config.msc_server_list:
             if server.alias == arg_text:
                 target_address = server.address
                 break
@@ -95,7 +96,7 @@ cmd_list = on_command("查服列表", priority=5, block=True)
 @cmd_list.handle()
 async def handle_list():
     msg = "已保存的服务器列表：\n"
-    for server in plugin_config.mcmotd_server_list:
+    for server in plugin_config.msc_server_list:
         alias_str = f" (别名: {server.alias})" if server.alias else ""
         msg += f"- {server.address}{alias_str}\n"
     await cmd_list.finish(msg.strip())

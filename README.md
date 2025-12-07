@@ -2,14 +2,10 @@
     <a href="https://v2.nonebot.dev/store">
     <img src="https://raw.githubusercontent.com/fllesser/nonebot-plugin-template/refs/heads/resource/.docs/NoneBotPlugin.svg" width="310" alt="logo"></a>
 
-## ✨ nonebot-plugin-mcserver-status ✨
-[![LICENSE](https://img.shields.io/github/license/leiuary/nonebot-plugin-mcserver-status.svg)](./LICENSE)
-[![pypi](https://img.shields.io/pypi/v/nonebot-plugin-mcserver-status.svg)](https://pypi.python.org/pypi/nonebot-plugin-mcserver-status)
-[![python](https://img.shields.io/badge/python-3.10|3.11|3.12|3.13-blue.svg)](https://www.python.org)
-[![uv](https://img.shields.io/badge/package%20manager-uv-black?style=flat-square&logo=uv)](https://github.com/astral-sh/uv)
-<br/>
-[![ruff](https://img.shields.io/badge/code%20style-ruff-black?style=flat-square&logo=ruff)](https://github.com/astral-sh/ruff)
-[![pre-commit](https://results.pre-commit.ci/badge/github/leiuary/nonebot-plugin-mcserver-status/master.svg)](https://results.pre-commit.ci/latest/github/leiuary/nonebot-plugin-mcserver-status/master)
+## ✨ nonebot-plugin-mcserver-status-check ✨
+[![LICENSE](https://img.shields.io/github/license/leiuary/nonebot-plugin-mcserver-status-check.svg)](./LICENSE)
+[![pypi](https://img.shields.io/pypi/v/nonebot-plugin-mcserver-status-check.svg)](https://pypi.python.org/pypi/nonebot-plugin-mcserver-status-check)
+[![python](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org)
 
 </div>
 
@@ -28,13 +24,13 @@
 <summary>使用 nb-cli 安装</summary>
 在 nonebot2 项目的根目录下打开命令行, 输入以下指令即可安装
 
-    nb plugin install nonebot-plugin-mcserver-status --upgrade
+    nb plugin install nonebot-plugin-mcserver-status-check --upgrade
 使用 **pypi** 源安装
 
-    nb plugin install nonebot-plugin-mcserver-status --upgrade -i "https://pypi.org/simple"
+    nb plugin install nonebot-plugin-mcserver-status-check --upgrade -i "https://pypi.org/simple"
 使用**清华源**安装
 
-    nb plugin install nonebot-plugin-mcserver-status --upgrade -i "https://pypi.tuna.tsinghua.edu.cn/simple"
+    nb plugin install nonebot-plugin-mcserver-status-check --upgrade -i "https://pypi.tuna.tsinghua.edu.cn/simple"
 
 
 </details>
@@ -46,32 +42,32 @@
 <details open>
 <summary>uv</summary>
 
-    uv add nonebot-plugin-mcserver-status
+    uv add nonebot-plugin-mcserver-status-check
 安装仓库 master 分支
 
-    uv add git+https://github.com/leiuary/nonebot-plugin-mcserver-status@master
+    uv add git+https://github.com/leiuary/nonebot-plugin-mcserver-status-check@master
 </details>
 
 <details>
 <summary>pdm</summary>
 
-    pdm add nonebot-plugin-mcserver-status
+    pdm add nonebot-plugin-mcserver-status-check
 安装仓库 master 分支
 
-    pdm add git+https://github.com/leiuary/nonebot-plugin-mcserver-status@master
+    pdm add git+https://github.com/leiuary/nonebot-plugin-mcserver-status-check@master
 </details>
 <details>
 <summary>poetry</summary>
 
-    poetry add nonebot-plugin-mcserver-status
+    poetry add nonebot-plugin-mcserver-status-check
 安装仓库 master 分支
 
-    poetry add git+https://github.com/leiuary/nonebot-plugin-mcserver-status@master
+    poetry add git+https://github.com/leiuary/nonebot-plugin-mcserver-status-check@master
 </details>
 
 打开 nonebot2 项目根目录下的 `pyproject.toml` 文件, 在 `[tool.nonebot]` 部分追加写入
 
-    plugins = ["nonebot_plugin_mcserver_status"]
+    plugins = ["nonebot_plugin_mcserver_status_check"]
 
 </details>
 
@@ -80,13 +76,13 @@
 
 [nbr](https://github.com/fllesser/nbr) 是一个基于 uv 的 nb-cli，可以方便地管理 nonebot2
 
-    nbr plugin install nonebot-plugin-mcserver-status
+    nbr plugin install nonebot-plugin-mcserver-status-check
 使用 **pypi** 源安装
 
-    nbr plugin install nonebot-plugin-mcserver-status -i "https://pypi.org/simple"
+    nbr plugin install nonebot-plugin-mcserver-status-check -i "https://pypi.org/simple"
 使用**清华源**安装
 
-    nbr plugin install nonebot-plugin-mcserver-status -i "https://pypi.tuna.tsinghua.edu.cn/simple"
+    nbr plugin install nonebot-plugin-mcserver-status-check -i "https://pypi.tuna.tsinghua.edu.cn/simple"
 
 </details>
 
@@ -97,37 +93,37 @@
 
 ```dotenv
 # 服务器列表
-MCMOTD_SERVER_LIST='[]'
+MSC_SERVER_LIST='[]'
 
 # 延迟测试间隔(秒)
-MCMOTD_LATENCY_INTERVAL=0.1
+MSC_LATENCY_INTERVAL=0.1
 
 # 延迟测试预热次数
-MCMOTD_LATENCY_WARMUP=1
+MSC_LATENCY_WARMUP=1
 
 # 延迟测试次数
-MCMOTD_LATENCY_COUNT=3
+MSC_LATENCY_COUNT=3
 
 # 是否去极值(去掉最大最小)
-MCMOTD_LATENCY_TRIM=true
+MSC_LATENCY_TRIM=true
 
 # 是否在控制台显示详细耗时
-MCMOTD_SHOW_TIMING_DETAILS=false
+MSC_SHOW_TIMING_DETAILS=false
 
 # 字体文件
-MCMOTD_FONT_PATH="minecraft.ttf"
+MSC_FONT_PATH="minecraft.ttf"
 
 # 触发指令列表
-MCMOTD_COMMAND_TRIGGERS=["查服"]
+MSC_COMMAND_TRIGGERS=["查服"]
 
 # 是否在列表模式显示玩家名单
-MCMOTD_SHOW_PLAYER_LIST=false
+MSC_SHOW_PLAYER_LIST=false
 ```
 
 ### 服务器列表配置示例
 
 ```dotenv
-MCMOTD_SERVER_LIST='[
+MSC_SERVER_LIST='[
   {"address": "mc.hypixel.net", "alias": "Hypixel"},
   {"address": "play.example.com", "alias": "示例服"}
 ]'

@@ -27,16 +27,16 @@ ROW_GAP = 10
 
 def get_font_path(config: Config) -> str:
     """解析字体路径，如果未找到则检查本地目录。"""
-    path = Path(config.mcmotd_font_path)
+    path = Path(config.msc_font_path)
     if path.exists():
         return str(path)
     
     # 尝试在与此文件相同的目录中查找
-    local_path = Path(__file__).parent / config.mcmotd_font_path
+    local_path = Path(__file__).parent / config.msc_font_path
     if local_path.exists():
         return str(local_path)
         
-    return config.mcmotd_font_path
+    return config.msc_font_path
 
 def pack_varint(d):
     """将整数打包为 VarInt (Minecraft 协议)。"""
@@ -154,8 +154,8 @@ def query_one_server(index, address, config: Config):
         t_warmup_start = time.time()
         
         # 1. 预热
-        if config.mcmotd_latency_warmup > 0:
-            for w_i in range(config.mcmotd_latency_warmup):
+        if config.msc_latency_warmup > 0:
+            for w_i in range(config.msc_latency_warmup):
                 try:
                     t0 = time.time()
                     temp_server = JavaServer.lookup(address, timeout=5)
@@ -163,13 +163,13 @@ def query_one_server(index, address, config: Config):
                     temp_server.status()
                     t2 = time.time()
                     detailed_logs.append(f"预热#{w_i+1}: DNS={(t1-t0)*1000:.1f}ms, Query={(t2-t1)*1000:.1f}ms")
-                    time.sleep(config.mcmotd_latency_interval)
+                    time.sleep(config.msc_latency_interval)
                 except Exception:
                     detailed_logs.append(f"预热#{w_i+1}: 失败")
         t_warmup_end = time.time()
 
         # 2. 实际测试
-        target_count = config.mcmotd_latency_count + (2 if config.mcmotd_latency_trim else 0)
+        target_count = config.msc_latency_count + (2 if config.msc_latency_trim else 0)
         t_test_start = time.time()
         
         fail_count = 0
@@ -194,7 +194,7 @@ def query_one_server(index, address, config: Config):
                 detailed_logs.append(f"测试#{i+1}: 失败")
             
             if i < target_count - 1:
-                time.sleep(config.mcmotd_latency_interval)
+                time.sleep(config.msc_latency_interval)
         t_test_end = time.time()
         
         if not latencies:
@@ -208,7 +208,7 @@ def query_one_server(index, address, config: Config):
         raw_avg = sum(latencies) / len(latencies)
         variance = sum((x - raw_avg) ** 2 for x in latencies) / len(latencies)
 
-        if config.mcmotd_latency_trim and len(latencies) >= 3:
+        if config.msc_latency_trim and len(latencies) >= 3:
             sorted_latencies = sorted(latencies)
             valid_latencies = sorted_latencies[1:-1]
             avg_latency = sum(valid_latencies) / len(valid_latencies)
@@ -226,7 +226,7 @@ def query_one_server(index, address, config: Config):
         
         print(f"✅ [{index+1}] {address} -> 延迟: [{latency_str}] -> 平均: {avg_latency:.2f} ms{avg_note}, 方差: {variance:.2f}, 丢包: {fail_count}")
         
-        if config.mcmotd_show_timing_details:
+        if config.msc_show_timing_details:
             print(f"   🕒 耗时详情: 总计 {t_total:.2f}s (预热: {t_warmup:.2f}s, 测试: {t_test:.2f}s)")
             for log in detailed_logs:
                 print(f"      -> {log}")
@@ -316,14 +316,14 @@ def create_summary_image(combined_rows, config: Config) -> Optional[Image.Image]
     return summary_img
 
 def generate_mcmotd_image(config: Config) -> Optional[Image.Image]:
-    print(f"🚀 开始并行查询 {len(config.mcmotd_server_list)} 个服务器...")
+    print(f"🚀 开始并行查询 {len(config.msc_server_list)} 个服务器...")
     
     font_path = get_font_path(config)
 
     # 并行查询
     query_results = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
-        future_map = {executor.submit(query_one_server, i, server.address, config): i for i, server in enumerate(config.mcmotd_server_list)}
+        future_map = {executor.submit(query_one_server, i, server.address, config): i for i, server in enumerate(config.msc_server_list)}
         for future in concurrent.futures.as_completed(future_map):
             query_results.append(future.result())
     
@@ -333,7 +333,7 @@ def generate_mcmotd_image(config: Config) -> Optional[Image.Image]:
     max_width = 0
     for res in query_results:
         idx = res["index"]
-        alias = config.mcmotd_server_list[idx].alias
+        alias = config.msc_server_list[idx].alias
         w = calculate_required_width(res["address"], res["status_obj"], font_path=font_path, alias=alias)
         if w > max_width: max_width = w
     
@@ -343,7 +343,7 @@ def generate_mcmotd_image(config: Config) -> Optional[Image.Image]:
     combined_rows = []
     for res in query_results:
         idx = res["index"]
-        alias = config.mcmotd_server_list[idx].alias
+        alias = config.msc_server_list[idx].alias
         icon, info = generate_server_card(res["address"], res["status_obj"], fixed_width=max_width, font_path=font_path, alias=alias)
         
         # 合并图标 + 信息
@@ -352,7 +352,7 @@ def generate_mcmotd_image(config: Config) -> Optional[Image.Image]:
         
         # 检查玩家列表
         player_img = None
-        if config.mcmotd_show_player_list and hasattr(res["status_obj"].players, 'sample') and res["status_obj"].players.sample:
+        if config.msc_show_player_list and hasattr(res["status_obj"].players, 'sample') and res["status_obj"].players.sample:
              player_img = render_player_list(res["status_obj"].players.sample, row_width, font_path)
         
         if player_img:
@@ -463,7 +463,7 @@ def generate_single_server_image(address: str, config: Config) -> Optional[Image
     
     # 查找别名
     alias = None
-    for s in config.mcmotd_server_list:
+    for s in config.msc_server_list:
         if s.address == address:
             alias = s.alias
             break
