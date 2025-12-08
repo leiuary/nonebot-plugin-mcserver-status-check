@@ -18,6 +18,12 @@
 - 详细的延迟测试（预热、多次测试取平均值、去极值）。
 - 可配置的字体和显示选项。
 
+### 🎨 效果图
+
+<div align="center">
+  <img src="preview.png" width="600" alt="效果图">
+</div>
+
 ## 💿 安装
 
 <details open>
@@ -138,12 +144,6 @@ MSC_SERVER_LIST='[
   - 单独查询指定服务器的状态。
 - **查服列表**
   - 查看当前配置的服务器列表及别名。
-
-### 🎨 效果图
-
-<div align="center">
-  <img src="preview.png" width="600" alt="效果图">
-</div>
 
 ## 💡 特性
 
