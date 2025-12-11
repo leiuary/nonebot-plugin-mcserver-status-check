@@ -99,15 +99,15 @@ MSC_SERVER_LIST='[]'
 MSC_LATENCY_INTERVAL=0.1
 
 # 延迟测试预热次数
-MSC_LATENCY_WARMUP=1
+MSC_LATENCY_WARMUP=2
 
 # 延迟测试次数
 MSC_LATENCY_COUNT=3
 
-# 是否去极值(去掉最大最小)
+# 是否去极值(去掉最大最小，次数自动加二)
 MSC_LATENCY_TRIM=true
 
-# 是否在控制台显示详细耗时
+# 是否在控制台显示详细信息
 MSC_SHOW_TIMING_DETAILS=false
 
 # 字体文件
@@ -125,7 +125,7 @@ MSC_SHOW_PLAYER_LIST=false
 ```dotenv
 MSC_SERVER_LIST='[
   {"address": "mc.hypixel.net", "alias": "Hypixel"},
-  {"address": "play.example.com", "alias": "示例服"}
+  {"address": "play.example.com"}
 ]'
 ```
 
