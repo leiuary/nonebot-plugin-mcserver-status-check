@@ -53,10 +53,12 @@ def unpack_varint(sock):
     d = 0
     for i in range(5):
         b = sock.recv(1)
-        if not b: return 0
-        b = ord(b)
-        d |= (b & 0x7F) << 7 * i
-        if not b & 0x80: return d
+        if not b:
+            return 0
+        b = b[0]
+        d |= (b & 0x7F) << (7 * i)
+        if not (b & 0x80):
+            return d
     return 0
 
 def get_rgb_json(hostname, port):
@@ -93,8 +95,9 @@ def get_rgb_json(hostname, port):
             chunk = sock.recv(min(4096, json_len - len(buffer)))
             if not chunk: break
             buffer += chunk
-            
-        return json.loads(buffer)
+        
+        # 服务器返回的是 UTF-8 文本，需要解码后再解析 JSON
+        return json.loads(buffer.decode('utf-8', errors='replace'))
     finally:
         sock.close()
 
@@ -169,7 +172,12 @@ def query_one_server(index, address, config: Config):
         t_warmup_end = time.time()
 
         # 2. 实际测试
-        target_count = config.msc_latency_count + (2 if config.msc_latency_trim else 0)
+        trim_enabled = (config.msc_latency_trim is True)
+        # 如果是 min/best 模式，默认不需要像 trim 那样额外加次数，但为了更有可能撞到好线路，多测几次也没问题。
+        # 这里为了保持去极值的一致性，如果是 True 则加2次。如果是字符串(min/best) 暂时不强制加2次，
+        # 但用户可以通过增加 msc_latency_count 来控制测试次数。
+        
+        target_count = config.msc_latency_count + (2 if trim_enabled else 0)
         t_test_start = time.time()
         
         fail_count = 0
@@ -202,29 +210,40 @@ def query_one_server(index, address, config: Config):
 
         # 3. 计算统计数据
         is_trimmed = False
+        mode_note = "" # 用于日志打印的模式说明
         raw_latencies = list(latencies)
         
         # 方差始终基于原始数据计算
         raw_avg = sum(latencies) / len(latencies)
         variance = sum((x - raw_avg) ** 2 for x in latencies) / len(latencies)
 
-        if config.msc_latency_trim and len(latencies) >= 3:
+        # 核心策略分流
+        latency_mode = config.msc_latency_trim
+
+        if isinstance(latency_mode, str) and latency_mode.lower() == "best":
+            # 最小延迟优先模式
+            avg_latency = min(latencies)
+            mode_note = " (极速模式)"
+        elif latency_mode is True and len(latencies) >= 3:
+            # 去极值模式 (去掉最大最小)
             sorted_latencies = sorted(latencies)
             valid_latencies = sorted_latencies[1:-1]
             avg_latency = sum(valid_latencies) / len(valid_latencies)
             is_trimmed = True
+            mode_note = " (已去极值)"
         else:
+            # 默认平均值模式
             avg_latency = raw_avg
+            mode_note = " (平均值)"
 
         # 记录结果
         latency_str = ", ".join([f"{l:.2f}" for l in raw_latencies])
-        avg_note = " (已去极值)" if is_trimmed else ""
         
         t_total = time.time() - t_start
         t_warmup = t_warmup_end - t_warmup_start
         t_test = t_test_end - t_test_start
         
-        print(f"✅ [{index+1}] {address} -> 延迟: [{latency_str}] -> 平均: {avg_latency:.2f} ms{avg_note}, 方差: {variance:.2f}, 丢包: {fail_count}")
+        print(f"✅ [{index+1}] {address} -> 延迟: [{latency_str}] -> 结果: {avg_latency:.2f} ms{mode_note}, 方差: {variance:.2f}, 丢包: {fail_count}")
         
         if config.msc_show_timing_details:
             print(f"   🕒 耗时详情: 总计 {t_total:.2f}s (预热: {t_warmup:.2f}s, 测试: {t_test:.2f}s)")
