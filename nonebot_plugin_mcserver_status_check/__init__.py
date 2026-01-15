@@ -4,12 +4,17 @@ import asyncio
 import io
 from typing import Annotated, Set
 
-from nonebot import get_plugin_config, on_command
-from nonebot.adapters.onebot.v11 import Message, MessageSegment
+import nonebot
+from nonebot import get_plugin_config, on_command, require
+
+require("nonebot_plugin_alconna")
+from nonebot.adapters import Message
 from nonebot.exception import FinishedException
 from nonebot.params import CommandArg
 from nonebot.plugin import PluginMetadata
 from nonebot.matcher import Matcher
+
+from nonebot_plugin_alconna import UniMessage
 
 from .config import Config
 from .checker import generate_mcmotd_image, generate_single_server_image
@@ -25,7 +30,7 @@ __plugin_meta__ = PluginMetadata(
     ]),
     type="application",
     homepage="https://github.com/leiuary/nonebot-plugin-mcserver-status-check",
-    supported_adapters={"nonebot.adapters.onebot.v11"},
+    supported_adapters=None,
     config=Config,
 )
 
@@ -62,7 +67,7 @@ async def handle_mcmotd(args: Annotated[Message, CommandArg()]):
                 img_byte_arr = io.BytesIO()
                 image.save(img_byte_arr, format='PNG')
                 img_bytes = img_byte_arr.getvalue()
-                await mcmotd.finish(MessageSegment.image(img_bytes))
+                await UniMessage.image(raw=img_bytes).finish()
             else:
                 await mcmotd.finish("查询失败，未能生成状态图片。")
                 
@@ -82,7 +87,7 @@ async def handle_mcmotd(args: Annotated[Message, CommandArg()]):
                 img_byte_arr = io.BytesIO()
                 image.save(img_byte_arr, format='PNG')
                 img_bytes = img_byte_arr.getvalue()
-                await mcmotd.finish(MessageSegment.image(img_bytes))
+                await UniMessage.image(raw=img_bytes).finish()
             else:
                 await mcmotd.finish("查询失败，未能生成状态图片。")
                 
