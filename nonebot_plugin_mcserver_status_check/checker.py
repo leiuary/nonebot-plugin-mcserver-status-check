@@ -13,7 +13,8 @@ from PIL import Image, ImageDraw, ImageFont
 from mcstatus import JavaServer
 
 from .config import Config
-from .mc_renderer import calculate_required_width, generate_server_card, parse_inner_legacy
+from .mc_renderer import parse_inner_legacy
+from .vanilla_screen_renderer import render_server_list_image
 
 # Image Settings
 TITLE_TEXT = "Minecraft Server Status"
@@ -130,7 +131,12 @@ class OfflineStatus:
     """
     def __init__(self, error_msg: str):
         self.raw = {
-            "description": {"text": f"§c无法连接到服务器\n§7{error_msg}"},
+            "description": {
+                "text": "无法连接到服务器",
+                "color": "red",
+                "bold": True,
+                "extra": [{"text": f"\n{error_msg}", "color": "gray", "bold": False}],
+            },
             "players": {"online": 0, "max": 0},
             "favicon": None, "version": {"name": "Unknown"}
         }
@@ -336,60 +342,35 @@ def create_summary_image(combined_rows, config: Config) -> Optional[Image.Image]
 
 def generate_mcmotd_image(config: Config) -> Optional[Image.Image]:
     print(f"🚀 开始并行查询 {len(config.msc_server_list)} 个服务器...")
-    
-    font_path = get_font_path(config)
 
-    # 并行查询
     query_results = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
-        future_map = {executor.submit(query_one_server, i, server.address, config): i for i, server in enumerate(config.msc_server_list)}
+        future_map = {
+            executor.submit(query_one_server, i, server.address, config): i
+            for i, server in enumerate(config.msc_server_list)
+        }
         for future in concurrent.futures.as_completed(future_map):
             query_results.append(future.result())
-    
-    query_results.sort(key=lambda x: x["index"])
 
-    # 1. 计算全局宽度以进行对齐
-    max_width = 0
-    for res in query_results:
-        idx = res["index"]
-        alias = config.msc_server_list[idx].alias
-        w = calculate_required_width(res["address"], res["status_obj"], font_path=font_path, alias=alias)
-        if w > max_width: max_width = w
-    
-    max_width = max(max_width, 800) # 最小宽度
-
-    # 2. 生成单独的行
-    combined_rows = []
-    for res in query_results:
-        idx = res["index"]
-        alias = config.msc_server_list[idx].alias
-        icon, info = generate_server_card(res["address"], res["status_obj"], fixed_width=max_width, font_path=font_path, alias=alias)
-        
-        # 合并图标 + 信息
-        row_width = icon.width + info.width
-        row_height = 128
-        
-        # 检查玩家列表
-        player_img = None
-        if config.msc_show_player_list and hasattr(res["status_obj"].players, 'sample') and res["status_obj"].players.sample:
-             player_img = render_player_list(res["status_obj"].players.sample, row_width, font_path)
-        
-        if player_img:
-            row_height += player_img.height
-
-        row_img = Image.new('RGB', (row_width, row_height), (30, 30, 30))
-        row_img.paste(icon, (0, 0))
-        row_img.paste(info, (icon.width, 0))
-        
-        if player_img:
-            row_img.paste(player_img, (0, 128))
-        
-        combined_rows.append(row_img)
-
-    # 3. 生成汇总图片
-    if combined_rows:
-        return create_summary_image(combined_rows, config)
-    return None
+    query_results.sort(key=lambda result: result["index"])
+    rows = [
+        {
+            "address": result["address"],
+            "alias": config.msc_server_list[result["index"]].alias,
+            "status_obj": result["status_obj"],
+            "player_samples": (
+                getattr(result["status_obj"].players, "sample", [])
+                if config.msc_show_player_list else []
+            ),
+        }
+        for result in query_results
+    ]
+    if not rows:
+        return None
+    return render_server_list_image(
+        rows,
+        font_path=get_font_path(config),
+    )
 
 def render_player_list(players, width, font_path):
     if not players: return None
@@ -478,78 +459,17 @@ def render_player_list(players, width, font_path):
     return img
 
 def generate_single_server_image(address: str, config: Config) -> Optional[Image.Image]:
-    font_path = get_font_path(config)
-    
-    # 查找别名
-    alias = None
-    for s in config.msc_server_list:
-        if s.address == address:
-            alias = s.alias
-            break
-
-    # 查询
-    res = query_one_server(0, address, config)
-    status = res["status_obj"]
-    
-    # 生成卡片
-    w = calculate_required_width(address, status, font_path=font_path, alias=alias)
-    w = max(w, 800)
-    
-    icon, info = generate_server_card(address, status, fixed_width=w, font_path=font_path, alias=alias)
-    
-    # 合并图标 + 信息
-    row_width = icon.width + info.width
-    row_height = 128
-    row_img = Image.new('RGB', (row_width, row_height), BG_COLOR)
-    row_img.paste(icon, (0, 0))
-    row_img.paste(info, (icon.width, 0))
-    
-    # 玩家列表
-    player_img = None
-    if hasattr(status.players, 'sample') and status.players.sample:
-        player_img = render_player_list(status.players.sample, row_width, font_path)
-        
-    # 标题和页脚
-    try:
-        font_title = ImageFont.truetype(font_path, 48)
-        font_footer = ImageFont.truetype(font_path, 24)
-    except:
-        font_title = ImageFont.load_default()
-        font_footer = ImageFont.load_default()
-        
-    dummy = ImageDraw.Draw(Image.new("RGB", (1, 1)))
-    
-    title_w = dummy.textlength(TITLE_TEXT, font=font_title)
-    title_h = 100
-    
-    footer_text = FOOTER_TEXT_TEMPLATE.format(time=time.strftime('%Y-%m-%d %H:%M:%S'))
-    footer_w = dummy.textlength(footer_text, font=font_footer)
-    footer_h = 40
-    
-    # 计算总高度
-    total_h = title_h + row_height + (player_img.height if player_img else 0) + footer_h + ROW_GAP
-    total_w = max(row_width, int(title_w + 60), int(footer_w + 40))
-    
-    # 创建最终图像
-    final_img = Image.new("RGB", (total_w, total_h), BG_COLOR)
-    draw = ImageDraw.Draw(final_img)
-    
-    # 绘制标题
-    draw.text(((total_w - title_w) // 2, (title_h - 48) // 2), TITLE_TEXT, fill=TEXT_COLOR, font=font_title)
-    
-    # 粘贴行
-
-    x_offset = (total_w - row_width) // 2
-    final_img.paste(row_img, (x_offset, title_h))
-    
-    curr_y = title_h + row_height
-    
-    # Paste Player List
-    if player_img:
-        final_img.paste(player_img, (x_offset, curr_y))
-        curr_y += player_img.height
-        
-    # Draw Footer
-    draw.text((total_w - footer_w - 20, total_h - footer_h + 10), footer_text, fill=FOOTER_COLOR, font=font_footer)
-    
-    return final_img
+    alias = next(
+        (server.alias for server in config.msc_server_list if server.address == address),
+        None,
+    )
+    result = query_one_server(0, address, config)
+    return render_server_list_image(
+        [{
+            "address": address,
+            "alias": alias,
+            "status_obj": result["status_obj"],
+            "player_samples": getattr(result["status_obj"].players, "sample", []),
+        }],
+        font_path=get_font_path(config),
+    )
