@@ -1,12 +1,20 @@
 [tool.poetry]
 name = "nonebot-plugin-mcserver-status-check"
-version = "0.1.8"
+version = "0.2.0-b1"
 description = "A vanilla-style, beautiful and efficient Minecraft server status query plugin"
 authors = ["leiuary <leiuary@qq.com>"]
 license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/leiuary/nonebot-plugin-mcserver-status-check"
 repository = "https://github.com/leiuary/nonebot-plugin-mcserver-status-check"
+include = [
+    { path = "nonebot_plugin_mcserver_status_check/assets/vanilla26", format = ["sdist", "wheel"] },
+    { path = "nonebot_plugin_mcserver_status_check/minecraft.ttf", format = ["sdist", "wheel"] },
+    { path = "nonebot_plugin_mcserver_status_check/vanilla_unifont.json", format = ["sdist", "wheel"] },
+    { path = "nonebot_plugin_mcserver_status_check/vanilla_unifont.zip", format = ["sdist", "wheel"] },
+    { path = "nonebot_plugin_mcserver_status_check/UNIFONT_LICENSE.txt", format = ["sdist", "wheel"] },
+    { path = "nonebot_plugin_mcserver_status_check/unknown_server.png", format = ["sdist", "wheel"] }
+]
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
