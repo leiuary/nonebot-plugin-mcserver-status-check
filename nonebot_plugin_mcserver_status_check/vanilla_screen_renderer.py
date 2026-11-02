@@ -172,7 +172,12 @@ def _draw_server_row(
     draw = ImageDraw.Draw(layer)
     status = row["status_obj"]
     raw = getattr(status, "raw", {}) or {}
-    name = str(row.get("alias") or row.get("name") or row.get("address") or "")
+    address = str(row.get("address") or "").strip()
+    label = str(row.get("alias") or row.get("name") or "").strip()
+    if address and label and label.casefold() != address.casefold():
+        name = f"{label} ({address})"
+    else:
+        name = label or address
 
     icon = _server_icon(raw.get("favicon"))
     icon = icon.resize((32 * scale, 32 * scale), Image.Resampling.NEAREST)
