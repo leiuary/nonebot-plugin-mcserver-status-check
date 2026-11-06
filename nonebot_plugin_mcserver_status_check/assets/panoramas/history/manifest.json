@@ -1,0 +1,983 @@
+{
+  "edition": "Java Edition",
+  "source": "Mojang launcher version manifest and official client assets",
+  "latest_release": "26.3",
+  "face_path": "assets/minecraft/textures/gui/title/background/panorama_0.png through panorama_5.png",
+  "background_sets": {
+    "b1.8": {
+      "directory": "sets/b1.8",
+      "versions": [
+        "b1.8",
+        "b1.8.1",
+        "1.0",
+        "1.1",
+        "1.2.1",
+        "1.2.2",
+        "1.2.3",
+        "1.2.4",
+        "1.2.5",
+        "1.3.1",
+        "1.3.2",
+        "1.4.2",
+        "1.4.4",
+        "1.4.5",
+        "1.4.6",
+        "1.4.7",
+        "1.5.1",
+        "1.5.2",
+        "1.6.1",
+        "1.6.2",
+        "1.6.4",
+        "1.7.2",
+        "1.7.3",
+        "1.7.4",
+        "1.7.5",
+        "1.7.6",
+        "1.7.7",
+        "1.7.8",
+        "1.7.9",
+        "1.7.10",
+        "1.8",
+        "1.8.1",
+        "1.8.2",
+        "1.8.3",
+        "1.8.4",
+        "1.8.5",
+        "1.8.6",
+        "1.8.7",
+        "1.8.8",
+        "1.8.9",
+        "1.9",
+        "1.9.1",
+        "1.9.2",
+        "1.9.3",
+        "1.9.4",
+        "1.10",
+        "1.10.1",
+        "1.10.2",
+        "1.11",
+        "1.11.1",
+        "1.11.2",
+        "1.12",
+        "1.12.1",
+        "1.12.2"
+      ],
+      "face_sha1": [
+        "54dab49f853bcb41b7c27d79fd9735d2c80b31f5",
+        "2a61a1db7180d196dd91cee72283842e841b3ddb",
+        "721f5449467551f990f0e349c462153ee66a05cf",
+        "5d7ce44d6906452a415f8ea93e0d8db41cdd54bf",
+        "21bbeca76cdfc6fd0abb055023c87088780d7a85",
+        "d6784464ed37c07079b16f212f3350f445b3a35a"
+      ],
+      "equirectangular": "equirectangular/b1.8.jpg",
+      "equirectangular_size": [
+        1536,
+        768
+      ]
+    },
+    "1.13": {
+      "directory": "sets/1.13",
+      "versions": [
+        "1.13",
+        "1.13.1",
+        "1.13.2"
+      ],
+      "face_sha1": [
+        "39f20e6c806e4dbd110582797c0eca280e223c73",
+        "a21bd35490d90c3dca72778d7c47de07b8051486",
+        "b930a8829484f9028d381f3810e43a389916505c",
+        "07d6e42c85a287b312faefd8ed01f27b6028a846",
+        "8c6e6e5f70619b946ec178778205d215fddc6e6b",
+        "bd2f8895d3d9e18f538742b5008c5140e5a3a22e"
+      ],
+      "equirectangular": "equirectangular/1.13.jpg",
+      "equirectangular_size": [
+        1536,
+        768
+      ]
+    },
+    "1.14": {
+      "directory": "sets/1.14",
+      "versions": [
+        "1.14",
+        "1.14.1",
+        "1.14.2",
+        "1.14.3",
+        "1.14.4"
+      ],
+      "face_sha1": [
+        "d75f4a52c3a7333e1676f9d648dbc3a129eaf182",
+        "efd77d8aef4530e470dde3ac37d63be6e480f8a0",
+        "56422fac8e05210fdccb2ff208070f9218c0da6d",
+        "20b8b2f99f0c6f659267366239f61d6a1b8c9156",
+        "42b33085867226820f5d6ea60d276fd22be2c0ef",
+        "b11528c03e56db38d3a09dc6f0f3fe7bcb4fc0f4"
+      ],
+      "equirectangular": "equirectangular/1.14.jpg",
+      "equirectangular_size": [
+        1536,
+        768
+      ]
+    },
+    "1.15": {
+      "directory": "sets/1.15",
+      "versions": [
+        "1.15",
+        "1.15.1",
+        "1.15.2"
+      ],
+      "face_sha1": [
+        "5f2e3863ecb4f942315bf65c30083831570065bc",
+        "6d6218dbc0344524ffafbe6f63657940029e25ba",
+        "f67b109ec66db2100c9580d974937fb14bad0d94",
+        "363803ca6e29e3b3a86238086bb4ea06874e8a77",
+        "e0ea270a90cb51b0ab135371f3604888a77be739",
+        "af7c80d4229733c732623f3b08ffd45110608b13"
+      ],
+      "equirectangular": "equirectangular/1.15.jpg",
+      "equirectangular_size": [
+        1536,
+        768
+      ]
+    },
+    "1.16": {
+      "directory": "sets/1.16",
+      "versions": [
+        "1.16",
+        "1.16.1",
+        "1.16.2",
+        "1.16.3",
+        "1.16.4",
+        "1.16.5"
+      ],
+      "face_sha1": [
+        "fe531cd13f671fa7d7392d090b93bbeca4ed0029",
+        "d8c61356bcb0c2dd087300d2857000078d05e862",
+        "781d243e743f1a716ae36d5fdcbd4c80adf8ee0d",
+        "98729ec34c8e1bceb9b0ff41a85ebee33eff8b41",
+        "6c426128a04ff458f823319e3e68c8bc893d0dda",
+        "945630f5471aa307ec6bd6e53e9c1a278ff35f32"
+      ],
+      "equirectangular": "equirectangular/1.16.jpg",
+      "equirectangular_size": [
+        1536,
+        768
+      ]
+    },
+    "1.17": {
+      "directory": "sets/1.17",
+      "versions": [
+        "1.17",
+        "1.17.1"
+      ],
+      "face_sha1": [
+        "81b7228275ad580fd0a47ab4e51061f330df0bd4",
+        "4b7e517611dc9a5180201466046c2fe0d1216d00",
+        "f4e61ad8551dad48c505b8258841d87ec7df75f5",
+        "5d3f8ef1dc0084d49b3a1c1e8b2606028d83cca0",
+        "bc07f32c38f0321358c7399dc69f380a1401a888",
+        "873c08365fbb20413491b5d782f88aa0459fe8bc"
+      ],
+      "equirectangular": "equirectangular/1.17.jpg",
+      "equirectangular_size": [
+        1536,
+        768
+      ]
+    },
+    "1.18": {
+      "directory": "sets/1.18",
+      "versions": [
+        "1.18",
+        "1.18.1",
+        "1.18.2"
+      ],
+      "face_sha1": [
+        "166d2109d4ba5a5c713fa31df0f07018220449a8",
+        "11dda623a695884d57f79b230f5ed0a709817758",
+        "03658a18af099f00103fbc2bf5e1dde514e63dff",
+        "a28ba83aece09a472178699d706f7aa5747f25bf",
+        "75a124e1be0d86c57bac49c7f2d7911486f6e98d",
+        "617783a408fca4c7f74af3ad73cb0f9263f01698"
+      ],
+      "equirectangular": "equirectangular/1.18.jpg",
+      "equirectangular_size": [
+        1536,
+        768
+      ]
+    },
+    "1.19": {
+      "directory": "sets/1.19",
+      "versions": [
+        "1.19",
+        "1.19.1",
+        "1.19.2",
+        "1.19.3",
+        "1.19.4"
+      ],
+      "face_sha1": [
+        "e956e0986b597ec1b7d1db720dc8aec3a0642630",
+        "e11e318343cc7dad5d1ffd7f73b64a38c8efd307",
+        "10d2bc498bffd73e0f120ba3eb336953db05c713",
+        "70ae9c314c2c280af94a08c2403801e120ee4b3c",
+        "9519c93477a4394b4ceaaa0f856c7fdd7babd834",
+        "9a5729d795b1edfeffaa99506983c8b279880fa9"
+      ],
+      "equirectangular": "equirectangular/1.19.jpg",
+      "equirectangular_size": [
+        1536,
+        768
+      ]
+    },
+    "1.20": {
+      "directory": "sets/1.20",
+      "versions": [
+        "1.20",
+        "1.20.1",
+        "1.20.2",
+        "1.20.3",
+        "1.20.4",
+        "1.20.5",
+        "1.20.6"
+      ],
+      "face_sha1": [
+        "f228a4964175f885b334033c5e5cf12bf62421d0",
+        "28389e89137ba4ed2578c6748b23543759580b06",
+        "28ed5175e545a92757ec60a2cc05e4599dd3e96a",
+        "29ef924f1bb2a66ec35aa032ca8ab59431a2ebf6",
+        "dbd2a426590ecbbbe2ee416d8fa00e1cac800008",
+        "344a480830217004a601358cb2bdbb4ccccf88a9"
+      ],
+      "equirectangular": "equirectangular/1.20.jpg",
+      "equirectangular_size": [
+        1536,
+        768
+      ]
+    },
+    "1.21": {
+      "directory": "sets/1.21",
+      "versions": [
+        "1.21",
+        "1.21.1",
+        "1.21.2",
+        "1.21.3"
+      ],
+      "face_sha1": [
+        "dca189017c6b77dc6e55ebfb0baca2b645b6e4cd",
+        "97d080a6827e54904eb7bbe0f04df20eb9070d1a",
+        "d79ff13dd8ff2f7b8d497a7516db1bb2d86d2ab8",
+        "b6265425a2c765dd5fc286d5f355a812cad938e2",
+        "cec25b0246d77e6f1dcef0d051ccb328ba39227a",
+        "74703134a27a57d2de96860bca55d447759c0edc"
+      ],
+      "equirectangular": "equirectangular/1.21.jpg",
+      "equirectangular_size": [
+        1536,
+        768
+      ]
+    },
+    "1.21.4": {
+      "directory": "sets/1.21.4",
+      "versions": [
+        "1.21.4"
+      ],
+      "face_sha1": [
+        "11e7261085b99ec9c850a59ed95b6bfbb576c8cc",
+        "87a04c89609bad3c46e45420eba4ffddac4be836",
+        "cf5c286cb670d4c0ea5fc03728252fe4003b3fbb",
+        "8294df934ee4a6373d973cdb5257df793641ba34",
+        "60a0380dca096ae055fc1d7d88eebfc33ae94d7b",
+        "7d5d238627d3e4171979be59f8c73e8aad5479ae"
+      ],
+      "equirectangular": "equirectangular/1.21.4.jpg",
+      "equirectangular_size": [
+        1536,
+        768
+      ]
+    },
+    "1.21.5": {
+      "directory": "sets/1.21.5",
+      "versions": [
+        "1.21.5"
+      ],
+      "face_sha1": [
+        "4c91acd1304382c9815c9cda9be936a8f1add659",
+        "fe231871707578f0e122d0d7c85f467d04c8bb30",
+        "2bf90cff6cfb2c2e9d5e74069a08fd3dbfa9f0c3",
+        "90662a383543c50f40f1e25927d95b18d8222ea0",
+        "01ee504c51dfe11bbdfadbc0445c7c84b728d3a8",
+        "2b37830aab6dfb005764829dd2371bd371b87d66"
+      ],
+      "equirectangular": "equirectangular/1.21.5.jpg",
+      "equirectangular_size": [
+        1536,
+        768
+      ]
+    },
+    "1.21.6": {
+      "directory": "sets/1.21.6",
+      "versions": [
+        "1.21.6",
+        "1.21.7",
+        "1.21.8"
+      ],
+      "face_sha1": [
+        "e3e856304400d0c4da3e41cf4954491e0c337e03",
+        "89e4e7c845d442d308a6194488de8bd3397f0791",
+        "80e51ad5c2febf6fab7fd4416ebf8d7b244ac726",
+        "0c55f2465e076e974d4c21fc0320fb4a44c870ef",
+        "52c1682d1c7195b377109a73b1e68a614d145d54",
+        "24b73002ef685bf6c2364219428f548c0c8b1488"
+      ],
+      "equirectangular": "equirectangular/1.21.6.jpg",
+      "equirectangular_size": [
+        1536,
+        768
+      ]
+    },
+    "1.21.9": {
+      "directory": "sets/1.21.9",
+      "versions": [
+        "1.21.9",
+        "1.21.10"
+      ],
+      "face_sha1": [
+        "0345cc0f9d4e5ddaf1b1c091c8785b28365d094f",
+        "5964341a814ba251ab15e4a8c986d045ecb8e799",
+        "dbc44494bd40cd75914a9f58a7ad8a6244dc6759",
+        "ec17c4fe7e64e499452071698702ecfa8c94f09b",
+        "69e16a0585be89de9bd4007a9b9eef330412c9e6",
+        "36d4362fb349de7118d4c7143eb41e4dfb37fde7"
+      ],
+      "equirectangular": "equirectangular/1.21.9.jpg",
+      "equirectangular_size": [
+        1536,
+        768
+      ]
+    },
+    "1.21.11": {
+      "directory": "sets/1.21.11",
+      "versions": [
+        "1.21.11"
+      ],
+      "face_sha1": [
+        "af28e43df0b60875348cecd1c1f65e2325b54204",
+        "15e3d77a4555455d752fde55b2661c159bee59ba",
+        "bc648a153191d8490fbaaa49e89c62240c6b2936",
+        "79795659716b1f0ad2b2b3078933acb7c86327d9",
+        "64d2b763bb3bcfcaee67ba1b9351b0a83c209ae7",
+        "4ef46fd3165dcd588f4b2d945d4aacca9ad90d42"
+      ],
+      "equirectangular": "equirectangular/1.21.11.jpg",
+      "equirectangular_size": [
+        1536,
+        768
+      ]
+    },
+    "26.1": {
+      "directory": "sets/26.1",
+      "versions": [
+        "26.1",
+        "26.1.1",
+        "26.1.2"
+      ],
+      "face_sha1": [
+        "4a8493454b4307e330501892058541ed0bf228da",
+        "9cf7432d7cf6ac9e1d67cb72fb3606860fdbca65",
+        "b1b1ffde0727a421f15b736c85b5bc6605ec1cc2",
+        "fb5668247ffd51905e3a13eff34b74c9b709e2f4",
+        "0f66c27917abf3b05c61c58e79e012b87ff87bcb",
+        "81dedcb3d42b47306fde0d47e7388c62792b5fd3"
+      ],
+      "equirectangular": "equirectangular/26.1.jpg",
+      "equirectangular_size": [
+        1536,
+        768
+      ]
+    },
+    "26.2": {
+      "directory": "sets/26.2",
+      "versions": [
+        "26.2"
+      ],
+      "face_sha1": [
+        "f5e0a5cfbc2e7b1e89094d7882dde106b030ec26",
+        "7eed27f04c07c11f28c8500f3bfe768efcce4ccb",
+        "cc6832a02808837dd5bc309020054592ef4b58de",
+        "d57bf5739d53501e511593220aa730488f1be990",
+        "894dbd30f3c467d78629927b6ec89d9838412415",
+        "e448b43724a15a06b9e2fe44114d2c203947d607"
+      ],
+      "equirectangular": "equirectangular/26.2.jpg",
+      "equirectangular_size": [
+        1536,
+        768
+      ]
+    },
+    "26.3": {
+      "directory": "sets/26.3",
+      "versions": [
+        "26.3"
+      ],
+      "face_sha1": [
+        "479ad40b906b87eab6d9eaa66f273226988dc2b2",
+        "6a84d4afab797aaf9f6ad283ebcd5899493c5c64",
+        "a9368ad23ea1b7517cc2fdf5b3d73cec45a045db",
+        "4e260704b88f2cd57fbc05abcd1a4264df733f91",
+        "17229c85a056fa9e97e9b025fd76e1e081b36317",
+        "61331fc97f54d2f7500cdbb14d16bc1244539272"
+      ],
+      "equirectangular": "equirectangular/26.3.jpg",
+      "equirectangular_size": [
+        1536,
+        768
+      ]
+    }
+  },
+  "versions": {
+    "b1.8": {
+      "type": "old_beta",
+      "release_time": "2011-09-14T22:00:00+00:00",
+      "background_set": "b1.8"
+    },
+    "b1.8.1": {
+      "type": "old_beta",
+      "release_time": "2011-09-18T22:00:00+00:00",
+      "background_set": "b1.8"
+    },
+    "1.0": {
+      "type": "release",
+      "release_time": "2011-11-17T22:00:00+00:00",
+      "background_set": "b1.8"
+    },
+    "1.1": {
+      "type": "release",
+      "release_time": "2012-01-11T22:00:00+00:00",
+      "background_set": "b1.8"
+    },
+    "1.2.1": {
+      "type": "release",
+      "release_time": "2012-02-29T22:00:00+00:00",
+      "background_set": "b1.8"
+    },
+    "1.2.2": {
+      "type": "release",
+      "release_time": "2012-02-29T22:00:01+00:00",
+      "background_set": "b1.8"
+    },
+    "1.2.3": {
+      "type": "release",
+      "release_time": "2012-03-01T22:00:00+00:00",
+      "background_set": "b1.8"
+    },
+    "1.2.4": {
+      "type": "release",
+      "release_time": "2012-03-21T22:00:00+00:00",
+      "background_set": "b1.8"
+    },
+    "1.2.5": {
+      "type": "release",
+      "release_time": "2012-03-29T22:00:00+00:00",
+      "background_set": "b1.8"
+    },
+    "1.3.1": {
+      "type": "release",
+      "release_time": "2012-07-31T22:00:00+00:00",
+      "background_set": "b1.8"
+    },
+    "1.3.2": {
+      "type": "release",
+      "release_time": "2012-08-15T22:00:00+00:00",
+      "background_set": "b1.8"
+    },
+    "1.4.2": {
+      "type": "release",
+      "release_time": "2012-11-24T22:00:00+00:00",
+      "background_set": "b1.8"
+    },
+    "1.4.4": {
+      "type": "release",
+      "release_time": "2012-12-13T22:00:00+00:00",
+      "background_set": "b1.8"
+    },
+    "1.4.5": {
+      "type": "release",
+      "release_time": "2012-12-19T22:00:00+00:00",
+      "background_set": "b1.8"
+    },
+    "1.4.6": {
+      "type": "release",
+      "release_time": "2012-12-19T22:00:00+00:00",
+      "background_set": "b1.8"
+    },
+    "1.4.7": {
+      "type": "release",
+      "release_time": "2012-12-27T22:00:00+00:00",
+      "background_set": "b1.8"
+    },
+    "1.5.1": {
+      "type": "release",
+      "release_time": "2013-03-20T10:00:00+00:00",
+      "background_set": "b1.8"
+    },
+    "1.5.2": {
+      "type": "release",
+      "release_time": "2013-04-25T15:45:00+00:00",
+      "background_set": "b1.8"
+    },
+    "1.6.1": {
+      "type": "release",
+      "release_time": "2013-06-28T14:48:41+00:00",
+      "background_set": "b1.8"
+    },
+    "1.6.2": {
+      "type": "release",
+      "release_time": "2013-07-05T13:09:02+00:00",
+      "background_set": "b1.8"
+    },
+    "1.6.4": {
+      "type": "release",
+      "release_time": "2013-09-19T15:52:37+00:00",
+      "background_set": "b1.8"
+    },
+    "1.7.2": {
+      "type": "release",
+      "release_time": "2013-10-25T13:00:00+00:00",
+      "background_set": "b1.8"
+    },
+    "1.7.3": {
+      "type": "release",
+      "release_time": "2013-12-06T13:55:34+00:00",
+      "background_set": "b1.8"
+    },
+    "1.7.4": {
+      "type": "release",
+      "release_time": "2013-12-09T12:28:10+00:00",
+      "background_set": "b1.8"
+    },
+    "1.7.5": {
+      "type": "release",
+      "release_time": "2014-02-26T09:22:17+00:00",
+      "background_set": "b1.8"
+    },
+    "1.7.6": {
+      "type": "release",
+      "release_time": "2014-04-09T07:52:06+00:00",
+      "background_set": "b1.8"
+    },
+    "1.7.7": {
+      "type": "release",
+      "release_time": "2014-04-09T07:52:16+00:00",
+      "background_set": "b1.8"
+    },
+    "1.7.8": {
+      "type": "release",
+      "release_time": "2014-04-09T07:58:16+00:00",
+      "background_set": "b1.8"
+    },
+    "1.7.9": {
+      "type": "release",
+      "release_time": "2014-04-14T13:29:23+00:00",
+      "background_set": "b1.8"
+    },
+    "1.7.10": {
+      "type": "release",
+      "release_time": "2014-05-14T17:29:23+00:00",
+      "background_set": "b1.8"
+    },
+    "1.8": {
+      "type": "release",
+      "release_time": "2014-09-02T08:24:35+00:00",
+      "background_set": "b1.8"
+    },
+    "1.8.1": {
+      "type": "release",
+      "release_time": "2014-11-24T14:13:31+00:00",
+      "background_set": "b1.8"
+    },
+    "1.8.2": {
+      "type": "release",
+      "release_time": "2015-02-19T15:47:29+00:00",
+      "background_set": "b1.8"
+    },
+    "1.8.3": {
+      "type": "release",
+      "release_time": "2015-02-20T14:00:09+00:00",
+      "background_set": "b1.8"
+    },
+    "1.8.4": {
+      "type": "release",
+      "release_time": "2015-04-17T11:37:50+00:00",
+      "background_set": "b1.8"
+    },
+    "1.8.5": {
+      "type": "release",
+      "release_time": "2015-05-22T11:15:28+00:00",
+      "background_set": "b1.8"
+    },
+    "1.8.6": {
+      "type": "release",
+      "release_time": "2015-05-25T10:31:19+00:00",
+      "background_set": "b1.8"
+    },
+    "1.8.7": {
+      "type": "release",
+      "release_time": "2015-06-05T10:10:44+00:00",
+      "background_set": "b1.8"
+    },
+    "1.8.8": {
+      "type": "release",
+      "release_time": "2015-07-27T10:31:28+00:00",
+      "background_set": "b1.8"
+    },
+    "1.8.9": {
+      "type": "release",
+      "release_time": "2015-12-03T09:24:39+00:00",
+      "background_set": "b1.8"
+    },
+    "1.9": {
+      "type": "release",
+      "release_time": "2016-02-29T13:49:54+00:00",
+      "background_set": "b1.8"
+    },
+    "1.9.1": {
+      "type": "release",
+      "release_time": "2016-03-30T13:43:07+00:00",
+      "background_set": "b1.8"
+    },
+    "1.9.2": {
+      "type": "release",
+      "release_time": "2016-03-30T15:23:55+00:00",
+      "background_set": "b1.8"
+    },
+    "1.9.3": {
+      "type": "release",
+      "release_time": "2016-05-10T08:33:35+00:00",
+      "background_set": "b1.8"
+    },
+    "1.9.4": {
+      "type": "release",
+      "release_time": "2016-05-10T10:17:16+00:00",
+      "background_set": "b1.8"
+    },
+    "1.10": {
+      "type": "release",
+      "release_time": "2016-06-08T13:06:18+00:00",
+      "background_set": "b1.8"
+    },
+    "1.10.1": {
+      "type": "release",
+      "release_time": "2016-06-22T10:13:22+00:00",
+      "background_set": "b1.8"
+    },
+    "1.10.2": {
+      "type": "release",
+      "release_time": "2016-06-23T09:17:32+00:00",
+      "background_set": "b1.8"
+    },
+    "1.11": {
+      "type": "release",
+      "release_time": "2016-11-14T14:34:40+00:00",
+      "background_set": "b1.8"
+    },
+    "1.11.1": {
+      "type": "release",
+      "release_time": "2016-12-20T14:05:34+00:00",
+      "background_set": "b1.8"
+    },
+    "1.11.2": {
+      "type": "release",
+      "release_time": "2016-12-21T09:29:12+00:00",
+      "background_set": "b1.8"
+    },
+    "1.12": {
+      "type": "release",
+      "release_time": "2017-06-02T13:50:27+00:00",
+      "background_set": "b1.8"
+    },
+    "1.12.1": {
+      "type": "release",
+      "release_time": "2017-08-03T12:40:39+00:00",
+      "background_set": "b1.8"
+    },
+    "1.12.2": {
+      "type": "release",
+      "release_time": "2017-09-18T08:39:46+00:00",
+      "background_set": "b1.8"
+    },
+    "1.13": {
+      "type": "release",
+      "release_time": "2018-07-18T15:11:46+00:00",
+      "background_set": "1.13"
+    },
+    "1.13.1": {
+      "type": "release",
+      "release_time": "2018-08-22T14:03:42+00:00",
+      "background_set": "1.13"
+    },
+    "1.13.2": {
+      "type": "release",
+      "release_time": "2018-10-22T11:41:07+00:00",
+      "background_set": "1.13"
+    },
+    "1.14": {
+      "type": "release",
+      "release_time": "2019-04-23T14:52:44+00:00",
+      "background_set": "1.14"
+    },
+    "1.14.1": {
+      "type": "release",
+      "release_time": "2019-05-13T11:10:12+00:00",
+      "background_set": "1.14"
+    },
+    "1.14.2": {
+      "type": "release",
+      "release_time": "2019-05-27T11:48:25+00:00",
+      "background_set": "1.14"
+    },
+    "1.14.3": {
+      "type": "release",
+      "release_time": "2019-06-24T12:52:52+00:00",
+      "background_set": "1.14"
+    },
+    "1.14.4": {
+      "type": "release",
+      "release_time": "2019-07-19T09:25:47+00:00",
+      "background_set": "1.14"
+    },
+    "1.15": {
+      "type": "release",
+      "release_time": "2019-12-09T13:13:38+00:00",
+      "background_set": "1.15"
+    },
+    "1.15.1": {
+      "type": "release",
+      "release_time": "2019-12-16T10:29:47+00:00",
+      "background_set": "1.15"
+    },
+    "1.15.2": {
+      "type": "release",
+      "release_time": "2020-01-17T10:03:52+00:00",
+      "background_set": "1.15"
+    },
+    "1.16": {
+      "type": "release",
+      "release_time": "2020-06-23T16:20:52+00:00",
+      "background_set": "1.16"
+    },
+    "1.16.1": {
+      "type": "release",
+      "release_time": "2020-06-24T10:31:40+00:00",
+      "background_set": "1.16"
+    },
+    "1.16.2": {
+      "type": "release",
+      "release_time": "2020-08-11T10:13:46+00:00",
+      "background_set": "1.16"
+    },
+    "1.16.3": {
+      "type": "release",
+      "release_time": "2020-09-10T13:42:37+00:00",
+      "background_set": "1.16"
+    },
+    "1.16.4": {
+      "type": "release",
+      "release_time": "2020-10-29T15:49:37+00:00",
+      "background_set": "1.16"
+    },
+    "1.16.5": {
+      "type": "release",
+      "release_time": "2021-01-14T16:05:32+00:00",
+      "background_set": "1.16"
+    },
+    "1.17": {
+      "type": "release",
+      "release_time": "2021-06-08T11:00:40+00:00",
+      "background_set": "1.17"
+    },
+    "1.17.1": {
+      "type": "release",
+      "release_time": "2021-07-06T12:01:34+00:00",
+      "background_set": "1.17"
+    },
+    "1.18": {
+      "type": "release",
+      "release_time": "2021-11-30T09:16:29+00:00",
+      "background_set": "1.18"
+    },
+    "1.18.1": {
+      "type": "release",
+      "release_time": "2021-12-10T08:23:00+00:00",
+      "background_set": "1.18"
+    },
+    "1.18.2": {
+      "type": "release",
+      "release_time": "2022-02-28T10:42:45+00:00",
+      "background_set": "1.18"
+    },
+    "1.19": {
+      "type": "release",
+      "release_time": "2022-06-07T09:42:18+00:00",
+      "background_set": "1.19"
+    },
+    "1.19.1": {
+      "type": "release",
+      "release_time": "2022-07-27T09:25:33+00:00",
+      "background_set": "1.19"
+    },
+    "1.19.2": {
+      "type": "release",
+      "release_time": "2022-08-05T11:57:05+00:00",
+      "background_set": "1.19"
+    },
+    "1.19.3": {
+      "type": "release",
+      "release_time": "2022-12-07T08:17:18+00:00",
+      "background_set": "1.19"
+    },
+    "1.19.4": {
+      "type": "release",
+      "release_time": "2023-03-14T12:56:18+00:00",
+      "background_set": "1.19"
+    },
+    "1.20": {
+      "type": "release",
+      "release_time": "2023-06-02T08:36:17+00:00",
+      "background_set": "1.20"
+    },
+    "1.20.1": {
+      "type": "release",
+      "release_time": "2023-06-12T13:25:51+00:00",
+      "background_set": "1.20"
+    },
+    "1.20.2": {
+      "type": "release",
+      "release_time": "2023-09-20T09:02:57+00:00",
+      "background_set": "1.20"
+    },
+    "1.20.3": {
+      "type": "release",
+      "release_time": "2023-12-04T12:10:32+00:00",
+      "background_set": "1.20"
+    },
+    "1.20.4": {
+      "type": "release",
+      "release_time": "2023-12-07T12:56:20+00:00",
+      "background_set": "1.20"
+    },
+    "1.20.5": {
+      "type": "release",
+      "release_time": "2024-04-23T11:54:12+00:00",
+      "background_set": "1.20"
+    },
+    "1.20.6": {
+      "type": "release",
+      "release_time": "2024-04-29T12:40:45+00:00",
+      "background_set": "1.20"
+    },
+    "1.21": {
+      "type": "release",
+      "release_time": "2024-06-13T08:24:03+00:00",
+      "background_set": "1.21"
+    },
+    "1.21.1": {
+      "type": "release",
+      "release_time": "2024-08-08T12:24:45+00:00",
+      "background_set": "1.21"
+    },
+    "1.21.2": {
+      "type": "release",
+      "release_time": "2024-10-22T09:58:55+00:00",
+      "background_set": "1.21"
+    },
+    "1.21.3": {
+      "type": "release",
+      "release_time": "2024-10-23T12:28:15+00:00",
+      "background_set": "1.21"
+    },
+    "1.21.4": {
+      "type": "release",
+      "release_time": "2024-12-03T10:12:57+00:00",
+      "background_set": "1.21.4"
+    },
+    "1.21.5": {
+      "type": "release",
+      "release_time": "2025-03-25T12:14:58+00:00",
+      "background_set": "1.21.5"
+    },
+    "1.21.6": {
+      "type": "release",
+      "release_time": "2025-06-17T11:10:28+00:00",
+      "background_set": "1.21.6"
+    },
+    "1.21.7": {
+      "type": "release",
+      "release_time": "2025-06-30T09:32:16+00:00",
+      "background_set": "1.21.6"
+    },
+    "1.21.8": {
+      "type": "release",
+      "release_time": "2025-07-17T12:04:02+00:00",
+      "background_set": "1.21.6"
+    },
+    "1.21.9": {
+      "type": "release",
+      "release_time": "2025-09-30T11:58:43+00:00",
+      "background_set": "1.21.9"
+    },
+    "1.21.10": {
+      "type": "release",
+      "release_time": "2025-10-07T09:17:23+00:00",
+      "background_set": "1.21.9"
+    },
+    "1.21.11": {
+      "type": "release",
+      "release_time": "2025-12-09T12:23:30+00:00",
+      "background_set": "1.21.11"
+    },
+    "26.1": {
+      "type": "release",
+      "release_time": "2026-03-24T12:11:04+00:00",
+      "background_set": "26.1"
+    },
+    "26.1.1": {
+      "type": "release",
+      "release_time": "2026-04-01T09:06:36+00:00",
+      "background_set": "26.1"
+    },
+    "26.1.2": {
+      "type": "release",
+      "release_time": "2026-04-09T10:12:23+00:00",
+      "background_set": "26.1"
+    },
+    "26.2": {
+      "type": "release",
+      "release_time": "2026-06-16T12:03:33+00:00",
+      "background_set": "26.2"
+    },
+    "26.3": {
+      "type": "release",
+      "release_time": "2026-09-15T11:23:02+00:00",
+      "background_set": "26.3"
+    }
+  },
+  "equirectangular_projection": {
+    "format": "2:1 equirectangular 360-degree panorama",
+    "size": [
+      1536,
+      768
+    ],
+    "encoding": "JPEG quality 82",
+    "center_direction": "panorama_0 (front)",
+    "face_order": [
+      "front",
+      "right",
+      "back",
+      "left",
+      "top",
+      "bottom"
+    ],
+    "sampling": "bilinear",
+    "note": "Generated from the original six-face cubemap; source faces are excluded from built distributions."
+  }
+}

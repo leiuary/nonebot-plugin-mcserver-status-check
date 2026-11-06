@@ -203,20 +203,24 @@ def query_one_server(index, address, config: Config):
                     except Exception as exc:
                         results[attempt] = exc
             return results
+
+        def start_serial_warmups(count):
+            if count <= 0:
+                return
+
+            executor = concurrent.futures.ThreadPoolExecutor(max_workers=count)
+            for attempt in range(count):
+                executor.submit(probe_status)
+                detailed_logs.append(f"预热#{attempt+1}: 已发起")
+                if attempt < count - 1:
+                    time.sleep(config.msc_latency_interval)
+            executor.shutdown(wait=False)
         
         t_warmup_start = time.time()
         
-        # 1. 预热
+        # 1. 按间隔依次发起预热，不等待响应完成
         if config.msc_latency_warmup > 0:
-            warmup_results = run_parallel_probes(config.msc_latency_warmup)
-            for w_i, result in enumerate(warmup_results):
-                if isinstance(result, Exception):
-                    detailed_logs.append(f"预热#{w_i+1}: 失败")
-                else:
-                    _, dns_ms, query_ms = result
-                    detailed_logs.append(
-                        f"预热#{w_i+1}: DNS={dns_ms:.1f}ms, Query={query_ms:.1f}ms"
-                    )
+            start_serial_warmups(config.msc_latency_warmup)
         t_warmup_end = time.time()
 
         # 2. 实际测试
@@ -405,6 +409,7 @@ def generate_mcmotd_image(config: Config) -> Optional[Image.Image]:
         rows,
         font_path=get_font_path(config),
         background_path=get_background_path(config),
+        background_blur=config.msc_background_blur,
     )
 
 def render_player_list(players, width, font_path):
@@ -508,4 +513,5 @@ def generate_single_server_image(address: str, config: Config) -> Optional[Image
         }],
         font_path=get_font_path(config),
         background_path=get_background_path(config),
+        background_blur=config.msc_background_blur,
     )

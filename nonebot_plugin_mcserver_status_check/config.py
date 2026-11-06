@@ -15,5 +15,6 @@ class Config(BaseModel):
     msc_show_timing_details: bool = False
     msc_font_path: str = "minecraft.ttf"
     msc_background_path: Optional[str] = None
+    msc_background_blur: bool = True
     msc_command_triggers: List[str] = Field(default_factory=lambda: ["查服"])
     msc_show_player_list: bool = False

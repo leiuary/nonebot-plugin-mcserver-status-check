@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nonebot-plugin-mcserver-status-check"
-version = "0.2.0-b3"
+version = "0.2.0-b4"
 description = "A vanilla-style, beautiful and efficient Minecraft server status query plugin"
 authors = ["leiuary <leiuary@qq.com>"]
 license = "MIT"
@@ -9,12 +9,16 @@ homepage = "https://github.com/leiuary/nonebot-plugin-mcserver-status-check"
 repository = "https://github.com/leiuary/nonebot-plugin-mcserver-status-check"
 include = [
     { path = "nonebot_plugin_mcserver_status_check/assets/vanilla26", format = ["sdist", "wheel"] },
+    { path = "nonebot_plugin_mcserver_status_check/assets/panoramas/history/equirectangular", format = ["sdist", "wheel"] },
+    { path = "nonebot_plugin_mcserver_status_check/assets/panoramas/history/manifest.json", format = ["sdist", "wheel"] },
+    { path = "nonebot_plugin_mcserver_status_check/assets/panoramas/history/README.txt", format = ["sdist", "wheel"] },
     { path = "nonebot_plugin_mcserver_status_check/minecraft.ttf", format = ["sdist", "wheel"] },
     { path = "nonebot_plugin_mcserver_status_check/vanilla_unifont.json", format = ["sdist", "wheel"] },
     { path = "nonebot_plugin_mcserver_status_check/vanilla_unifont.zip", format = ["sdist", "wheel"] },
     { path = "nonebot_plugin_mcserver_status_check/UNIFONT_LICENSE.txt", format = ["sdist", "wheel"] },
     { path = "nonebot_plugin_mcserver_status_check/unknown_server.png", format = ["sdist", "wheel"] }
 ]
+exclude = ["nonebot_plugin_mcserver_status_check/assets/panoramas/history/sets/**"]
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
@@ -22,6 +26,8 @@ nonebot2 = ">=2.3.0"
 pydantic = ">=2.0.0"
 nonebot-adapter-onebot = "^2.0.0"
 Pillow = ">=9.1.0"
+numpy = ">=2.0,<3.0"
+opencv-python-headless = ">=4.14,<5.0"
 mcstatus = ">=11.0.0"
 nonebot-plugin-alconna = ">=0.30.0"
 

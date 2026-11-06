@@ -20,7 +20,7 @@
 ### 🎨 效果图
 
 <div align="center">
-  <img src="preview.png" width="600" alt="效果图">
+  <img src="readme.png" width="600" alt="效果图">
 </div>
 
 ## 💿 安装
@@ -124,10 +124,13 @@ MSC_COMMAND_TRIGGERS=["查服"]
 # 汇总图片是否显示服务器响应附带的玩家样例（不是完整名单；单服查询不受此项影响）
 MSC_SHOW_PLAYER_LIST=false
 
-# 自定义背景图片目录；每次随机选图。留空使用默认灰色背景；按 Pillow 可读取格式筛选
+# 自定义背景图片目录；每次随机选图。留空则随机选择内置 Minecraft 全景背景版本与水平视角，左下角标注背景版本范围
 # 常见格式：PNG、JPEG、WebP、BMP、GIF（首帧）、TIFF、ICO；尺寸比例不同会居中裁切，不拉伸
 # 示例：./data/minecraft-backgrounds
 MSC_BACKGROUND_PATH=
+
+# 是否启用 Minecraft 菜单背景模糊；默认开启（影响内置和自定义背景）
+MSC_BACKGROUND_BLUR=true
 ```
 
 ### 服务器列表配置示例

@@ -53,7 +53,7 @@ def main() -> None:
             "player_samples": getattr(status.players, "sample", None) or [],
         }],
     )
-    output_path = ROOT / "preview.png"
+    output_path = ROOT / "preview-readme.png"
     image.save(output_path, optimize=True)
     print(f"Saved {output_path}")
 

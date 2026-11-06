@@ -4,19 +4,29 @@ from __future__ import annotations
 
 import base64
 import binascii
+import json
+import math
 import random
 import time
+from functools import lru_cache
 from io import BytesIO
 from pathlib import Path
 from typing import Any, Optional
 
-from PIL import Image, ImageDraw, ImageFont
+import numpy as np
+from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont
+
+try:
+    import cv2
+except (ImportError, OSError):
+    cv2 = None
 
 from .mc_renderer import BG_COLOR, MC_COLORS, parse_inner_legacy, resolve_color
 from .minecraft_font import FONT, MinecraftFont
 
 
 ASSET_DIR = Path(__file__).with_name("assets") / "vanilla26"
+PANORAMA_DIR = Path(__file__).with_name("assets") / "panoramas" / "history"
 DEFAULT_ICON_PATH = Path(__file__).with_name("unknown_server.png")
 ROW_WIDTH = 323
 ROW_HEIGHT = 32
@@ -26,6 +36,11 @@ TITLE_TEXT = "Minecraft Server Status"
 TITLE_FONT_SIZE = 48
 TITLE_HEADER_HEIGHT = 100
 FOOTER_TEXT_TEMPLATE = "{time}  |  Made by leiuary"
+# Minecraft 26.1.2 blur chain: three horizontal/vertical box-blur pairs, default radius 5.
+MC_MENU_BLUR_RADIUS = 5
+MC_MENU_BLUR_PASS_PAIRS = 3
+PANORAMA_HORIZONTAL_FOV = 100
+PANORAMA_MESH_CELL_SIZE = 32
 
 
 def render_server_list_image(
@@ -36,6 +51,7 @@ def render_server_list_image(
     force_unicode_font: bool = False,
     font_path: Optional[str] = None,
     background_path: Optional[str] = None,
+    background_blur: bool = True,
 ) -> Image.Image:
     """Render a static multiplayer-list frame from already queried statuses."""
     width = max(320, int(width))
@@ -55,7 +71,8 @@ def render_server_list_image(
             row.get("player_samples", []),
             row_width,
             font_path,
-            transparent_background=background_path is not None,
+            transparent_background=True,
+            shadow_offset=max(1, scale // 2),
         )
         row_layout.append((row, row_y, player_image))
         player_height = player_image.height if player_image is not None else 0
@@ -66,11 +83,15 @@ def render_server_list_image(
     )
     height = max(240, content_bottom + 50) if row_layout else max(height, 240)
 
-    image = (
-        _load_background(background_path, (width, height))
-        if background_path is not None
-        else Image.new("RGB", (width, height), BG_COLOR)
-    )
+    if background_path is None:
+        image, background_label = _load_random_panorama((width, height))
+    else:
+        image = _load_background(background_path, (width, height))
+        background_label = "自定义背景"
+
+    if background_blur:
+        image = _blur_background(image)
+
     _draw_title(image, font_path)
     for row, row_y, player_image in row_layout:
         _draw_server_row(image, row, row_left, row_y, row_width, row_height, scale, font)
@@ -78,7 +99,7 @@ def render_server_list_image(
             mask = player_image.getchannel("A") if player_image.mode == "RGBA" else None
             image.paste(player_image, (row_left, row_y + row_height), mask)
 
-    _draw_footer(image, font_path)
+    _draw_footer(image, font_path, background_label)
     return image
 
 
@@ -87,6 +108,7 @@ def _render_player_list_v01(
     width: int,
     font_path: str,
     transparent_background: bool = False,
+    shadow_offset: int = 1,
 ) -> Optional[Image.Image]:
     if not isinstance(players, list):
         return None
@@ -141,11 +163,22 @@ def _render_player_list_v01(
     y = 10
     for line in lines:
         x = 20
+        draw_items = []
         for index, name in enumerate(line):
             separator = ", " if not is_message_list and index < len(line) - 1 else ""
             for text, color, *_ in parse_inner_legacy(name + separator, (200, 200, 200)):
-                draw.text((x, y), text, fill=color, font=font)
+                draw_items.append((x, y, text, color))
                 x += dummy.textlength(text, font=font)
+        for x, y, text, color in draw_items:
+            shadow_color = tuple(channel // 4 for channel in color)
+            draw.text(
+                (x + shadow_offset, y + shadow_offset),
+                text,
+                fill=shadow_color,
+                font=font,
+            )
+        for x, y, text, color in draw_items:
+            draw.text((x, y), text, fill=color, font=font)
         y += 24
     return image
 
@@ -192,6 +225,153 @@ def _load_background(directory: str, size: tuple[int, int]) -> Image.Image:
     return background.crop((left, top, left + width, top + height))
 
 
+@lru_cache(maxsize=1)
+def _panorama_catalog() -> tuple[tuple[str, str], ...]:
+    with (PANORAMA_DIR / "manifest.json").open(encoding="utf-8") as manifest_file:
+        manifest = json.load(manifest_file)
+
+    catalog = []
+    for entry in manifest["background_sets"].values():
+        versions = entry["versions"]
+        version_range = versions[0]
+        if versions[-1] != versions[0]:
+            version_range = f"{versions[0]}–{versions[-1]}"
+        catalog.append((str(PANORAMA_DIR / entry["equirectangular"]), version_range))
+    return tuple(catalog)
+
+
+@lru_cache(maxsize=2)
+def _open_panorama(path: str) -> Any:
+    with Image.open(path) as source:
+        panorama = source.convert("RGB")
+    if cv2 is not None:
+        return np.asarray(panorama).copy()
+    return panorama
+
+
+def _load_random_panorama(size: tuple[int, int]) -> tuple[Image.Image, str]:
+    panorama_path, version_range = random.choice(_panorama_catalog())
+    panorama = _open_panorama(panorama_path)
+    if cv2 is not None:
+        panorama_height, panorama_width = panorama.shape[:2]
+        horizontal_offset = random.randrange(panorama_width)
+        map1, map2 = _panorama_projection_maps(
+            *size, panorama_width, panorama_height
+        )
+        shifted_map1 = map1.copy()
+        shifted_map1[:, :, 0] -= horizontal_offset
+        view_pixels = cv2.remap(
+            panorama,
+            shifted_map1,
+            map2,
+            cv2.INTER_LINEAR,
+            borderMode=cv2.BORDER_WRAP,
+        )
+        view = Image.fromarray(view_pixels)
+    else:
+        horizontal_offset = random.randrange(panorama.width)
+        panorama = ImageChops.offset(panorama, horizontal_offset, 0)
+        view = panorama.transform(
+            size,
+            Image.Transform.MESH,
+            _panorama_projection_mesh(*size, *panorama.size),
+            resample=Image.Resampling.BILINEAR,
+        )
+    return view, f"背景：{version_range}"
+
+
+def _blur_background(image: Image.Image) -> Image.Image:
+    if cv2 is not None:
+        pixels = np.asarray(image)
+        for _ in range(MC_MENU_BLUR_PASS_PAIRS):
+            pixels = cv2.boxFilter(
+                pixels,
+                -1,
+                (MC_MENU_BLUR_RADIUS * 2 + 1, 1),
+                normalize=True,
+                borderType=cv2.BORDER_REPLICATE,
+            )
+            pixels = cv2.boxFilter(
+                pixels,
+                -1,
+                (1, MC_MENU_BLUR_RADIUS * 2 + 1),
+                normalize=True,
+                borderType=cv2.BORDER_REPLICATE,
+            )
+        return Image.fromarray(pixels)
+
+    for _ in range(MC_MENU_BLUR_PASS_PAIRS):
+        image = image.filter(ImageFilter.BoxBlur((MC_MENU_BLUR_RADIUS, 0)))
+        image = image.filter(ImageFilter.BoxBlur((0, MC_MENU_BLUR_RADIUS)))
+    return image
+
+
+@lru_cache(maxsize=2)
+def _panorama_projection_maps(
+    width: int,
+    height: int,
+    panorama_width: int,
+    panorama_height: int,
+) -> tuple[np.ndarray, np.ndarray]:
+    focal_length = width / (2 * math.tan(math.radians(PANORAMA_HORIZONTAL_FOV / 2)))
+    horizontal = (
+        np.arange(width, dtype=np.float32) + 0.5 - width / 2
+    ) / focal_length
+    vertical = (
+        height / 2 - (np.arange(height, dtype=np.float32) + 0.5)
+    ) / focal_length
+    longitude = np.arctan(horizontal)
+    latitude = np.arctan2(
+        vertical[:, None],
+        np.sqrt(horizontal[None, :] * horizontal[None, :] + 1),
+    )
+    map_x = np.broadcast_to(
+        (0.5 + longitude / (2 * math.pi)) * panorama_width - 0.5,
+        (height, width),
+    ).astype(np.float32, copy=True)
+    map_y = (
+        (0.5 - latitude / math.pi) * panorama_height - 0.5
+    ).astype(np.float32, copy=False)
+    return cv2.convertMaps(map_x, map_y, cv2.CV_16SC2)
+
+
+@lru_cache(maxsize=8)
+def _panorama_projection_mesh(
+    width: int,
+    height: int,
+    panorama_width: int,
+    panorama_height: int,
+) -> tuple[tuple[tuple[int, int, int, int], tuple[float, ...]], ...]:
+    focal_length = width / (2 * math.tan(math.radians(PANORAMA_HORIZONTAL_FOV / 2)))
+
+    def source_point(x: int, y: int) -> tuple[float, float]:
+        horizontal = (x - width / 2) / focal_length
+        vertical = (height / 2 - y) / focal_length
+        longitude = math.atan(horizontal)
+        latitude = math.atan2(vertical, math.sqrt(horizontal * horizontal + 1))
+        source_x = (0.5 + longitude / (2 * math.pi)) * panorama_width - 0.5
+        source_y = (0.5 - latitude / math.pi) * panorama_height - 0.5
+        return source_x, source_y
+
+    mesh = []
+    for top in range(0, height, PANORAMA_MESH_CELL_SIZE):
+        bottom = min(top + PANORAMA_MESH_CELL_SIZE, height)
+        for left in range(0, width, PANORAMA_MESH_CELL_SIZE):
+            right = min(left + PANORAMA_MESH_CELL_SIZE, width)
+            upper_left = source_point(left, top)
+            lower_left = source_point(left, bottom)
+            lower_right = source_point(right, bottom)
+            upper_right = source_point(right, top)
+            quad = (
+                *upper_left,
+                *lower_left,
+                *lower_right,
+                *upper_right,
+            )
+            mesh.append(((left, top, right, bottom), quad))
+    return tuple(mesh)
+
+
 def _draw_title(image: Image.Image, font_path: str) -> None:
     draw = ImageDraw.Draw(image)
     try:
@@ -204,7 +384,7 @@ def _draw_title(image: Image.Image, font_path: str) -> None:
     draw.text((x, y), TITLE_TEXT, fill=(255, 255, 255), font=title_font)
 
 
-def _draw_footer(image: Image.Image, font_path: str) -> None:
+def _draw_footer(image: Image.Image, font_path: str, background_label: str) -> None:
     footer = FOOTER_TEXT_TEMPLATE.format(time=time.strftime("%Y-%m-%d %H:%M:%S"))
     draw = ImageDraw.Draw(image)
     try:
@@ -214,6 +394,7 @@ def _draw_footer(image: Image.Image, font_path: str) -> None:
     footer_width = draw.textlength(footer, font=footer_font)
     x = int(image.width - footer_width - 20)
     y = image.height - 30
+    draw.text((20, y), background_label, fill=(150, 150, 150), font=footer_font)
     draw.text((x, y), footer, fill=(150, 150, 150), font=footer_font)
 
 
