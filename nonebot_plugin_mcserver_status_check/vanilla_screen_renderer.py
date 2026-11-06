@@ -440,8 +440,23 @@ def _draw_server_row(
 
     motd = _component_segments(raw.get("description", ""), DEFAULT_TEXT)
     lines = _wrap_segments(motd, motd_width, font)
+    first_line_text = (
+        "".join(segment["text"] for segment in lines[0]) if lines else ""
+    )
+    second_line_text = (
+        "".join(segment["text"] for segment in lines[1])
+        if len(lines) > 1
+        else ""
+    )
+    # Align the repeated offline-message prefix while preserving bold glyph strokes.
+    align_bold_columns = (
+        bool(first_line_text)
+        and second_line_text.startswith(first_line_text)
+        and any(segment["bold"] for segment in lines[0])
+        and not any(segment["bold"] for segment in lines[1])
+    )
     for line_index, segments in enumerate(lines[:2]):
-        y = (12 + line_index * 9) * scale
+        y = (10 + line_index * 9) * scale
         x = text_x
         for segment in segments:
             x += font.draw(
@@ -451,6 +466,7 @@ def _draw_server_row(
                 segment["color"],
                 scale,
                 bold=segment["bold"],
+                advance_bold=(False if align_bold_columns and line_index == 0 else None),
                 italic=segment["italic"],
                 underline=segment["underline"],
                 strikethrough=segment["strikethrough"],

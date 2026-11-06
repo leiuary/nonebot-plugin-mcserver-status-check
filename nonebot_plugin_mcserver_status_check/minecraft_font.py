@@ -135,6 +135,7 @@ class MinecraftFont:
         scale: int,
         *,
         bold: bool = False,
+        advance_bold: Optional[bool] = None,
         italic: bool = False,
         underline: bool = False,
         strikethrough: bool = False,
@@ -149,6 +150,11 @@ class MinecraftFont:
                 continue
             advance = glyph["advance"]
             bold_offset = glyph["bold_offset"] if bold else 0
+            advance_bold_offset = (
+                glyph["bold_offset"]
+                if bold and (advance_bold is None or advance_bold)
+                else 0
+            )
             mask = glyph["mask"]
             pixel_scale = glyph["pixel_scale"] * scale
             if mask is not None:
@@ -185,7 +191,7 @@ class MinecraftFont:
                 if bold:
                     draw_instance(x + int(bold_offset * scale), glyph_y, color)
 
-            x += int(round((advance + bold_offset) * scale))
+            x += int(round((advance + advance_bold_offset) * scale))
 
         if text and underline:
             decoration_y = y + 7 * scale
