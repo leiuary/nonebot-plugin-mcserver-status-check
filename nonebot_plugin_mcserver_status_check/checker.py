@@ -39,6 +39,22 @@ def get_font_path(config: Config) -> str:
         
     return config.msc_font_path
 
+def get_background_path(config: Config) -> Optional[str]:
+    """解析可选背景图片目录；相对路径也会在插件目录中查找。"""
+    configured_path = (config.msc_background_path or "").strip()
+    if not configured_path:
+        return None
+
+    path = Path(configured_path).expanduser()
+    if path.is_dir():
+        return str(path)
+
+    local_path = Path(__file__).parent / path
+    if local_path.is_dir():
+        return str(local_path)
+
+    return configured_path
+
 def pack_varint(d):
     """将整数打包为 VarInt (Minecraft 协议)。"""
     o = b''
@@ -159,22 +175,48 @@ def query_one_server(index, address, config: Config):
         # --- 延迟测试 ---
         latencies = []
         last_std_status = None
+
+        def probe_status():
+            t0 = time.time()
+            server = JavaServer.lookup(address, timeout=5)
+            t1 = time.time()
+            status = server.status()
+            t2 = time.time()
+            return status, (t1 - t0) * 1000, (t2 - t1) * 1000
+
+        def run_parallel_probes(count):
+            if count <= 0:
+                return []
+
+            results = [None] * count
+            with concurrent.futures.ThreadPoolExecutor(max_workers=count) as executor:
+                future_map = {}
+                for attempt in range(count):
+                    future_map[executor.submit(probe_status)] = attempt
+                    if attempt < count - 1:
+                        time.sleep(config.msc_latency_interval)
+
+                for future in concurrent.futures.as_completed(future_map):
+                    attempt = future_map[future]
+                    try:
+                        results[attempt] = future.result()
+                    except Exception as exc:
+                        results[attempt] = exc
+            return results
         
         t_warmup_start = time.time()
         
         # 1. 预热
         if config.msc_latency_warmup > 0:
-            for w_i in range(config.msc_latency_warmup):
-                try:
-                    t0 = time.time()
-                    temp_server = JavaServer.lookup(address, timeout=5)
-                    t1 = time.time()
-                    temp_server.status()
-                    t2 = time.time()
-                    detailed_logs.append(f"预热#{w_i+1}: DNS={(t1-t0)*1000:.1f}ms, Query={(t2-t1)*1000:.1f}ms")
-                    time.sleep(config.msc_latency_interval)
-                except Exception:
+            warmup_results = run_parallel_probes(config.msc_latency_warmup)
+            for w_i, result in enumerate(warmup_results):
+                if isinstance(result, Exception):
                     detailed_logs.append(f"预热#{w_i+1}: 失败")
+                else:
+                    _, dns_ms, query_ms = result
+                    detailed_logs.append(
+                        f"预热#{w_i+1}: DNS={dns_ms:.1f}ms, Query={query_ms:.1f}ms"
+                    )
         t_warmup_end = time.time()
 
         # 2. 实际测试
@@ -187,28 +229,20 @@ def query_one_server(index, address, config: Config):
         t_test_start = time.time()
         
         fail_count = 0
-        for i in range(target_count):
-            try:
-                t0 = time.time()
-                # 每次都重新 lookup 以避免连接复用问题
-                server = JavaServer.lookup(address, timeout=5)
-                t1 = time.time()
-                st = server.status()
-                t2 = time.time()
-                
-                dns_ms = (t1 - t0) * 1000
-                query_ms = (t2 - t1) * 1000
-                ping_ms = st.latency
-                
-                latencies.append(ping_ms)
-                last_std_status = st
-                detailed_logs.append(f"测试#{i+1}: DNS={dns_ms:.1f}ms, Query={query_ms:.1f}ms, Ping={ping_ms:.1f}ms")
-            except Exception:
+        test_results = run_parallel_probes(target_count)
+        for i, result in enumerate(test_results):
+            if isinstance(result, Exception):
                 fail_count += 1
                 detailed_logs.append(f"测试#{i+1}: 失败")
-            
-            if i < target_count - 1:
-                time.sleep(config.msc_latency_interval)
+                continue
+
+            st, dns_ms, query_ms = result
+            ping_ms = st.latency
+            latencies.append(ping_ms)
+            last_std_status = st
+            detailed_logs.append(
+                f"测试#{i+1}: DNS={dns_ms:.1f}ms, Query={query_ms:.1f}ms, Ping={ping_ms:.1f}ms"
+            )
         t_test_end = time.time()
         
         if not latencies:
@@ -370,6 +404,7 @@ def generate_mcmotd_image(config: Config) -> Optional[Image.Image]:
     return render_server_list_image(
         rows,
         font_path=get_font_path(config),
+        background_path=get_background_path(config),
     )
 
 def render_player_list(players, width, font_path):
@@ -472,4 +507,5 @@ def generate_single_server_image(address: str, config: Config) -> Optional[Image
             "player_samples": getattr(result["status_obj"].players, "sample", []),
         }],
         font_path=get_font_path(config),
+        background_path=get_background_path(config),
     )

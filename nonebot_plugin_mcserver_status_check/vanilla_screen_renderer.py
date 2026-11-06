@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import base64
 import binascii
+import random
 import time
 from io import BytesIO
 from pathlib import Path
@@ -34,6 +35,7 @@ def render_server_list_image(
     gui_scale: int = 4,
     force_unicode_font: bool = False,
     font_path: Optional[str] = None,
+    background_path: Optional[str] = None,
 ) -> Image.Image:
     """Render a static multiplayer-list frame from already queried statuses."""
     width = max(320, int(width))
@@ -50,7 +52,10 @@ def render_server_list_image(
     row_y = first_row_y
     for row in rows:
         player_image = _render_player_list_v01(
-            row.get("player_samples", []), row_width, font_path
+            row.get("player_samples", []),
+            row_width,
+            font_path,
+            transparent_background=background_path is not None,
         )
         row_layout.append((row, row_y, player_image))
         player_height = player_image.height if player_image is not None else 0
@@ -61,19 +66,27 @@ def render_server_list_image(
     )
     height = max(240, content_bottom + 50) if row_layout else max(height, 240)
 
-    image = Image.new("RGB", (width, height), BG_COLOR)
+    image = (
+        _load_background(background_path, (width, height))
+        if background_path is not None
+        else Image.new("RGB", (width, height), BG_COLOR)
+    )
     _draw_title(image, font_path)
     for row, row_y, player_image in row_layout:
         _draw_server_row(image, row, row_left, row_y, row_width, row_height, scale, font)
         if player_image is not None:
-            image.paste(player_image, (row_left, row_y + row_height))
+            mask = player_image.getchannel("A") if player_image.mode == "RGBA" else None
+            image.paste(player_image, (row_left, row_y + row_height), mask)
 
     _draw_footer(image, font_path)
     return image
 
 
 def _render_player_list_v01(
-    players: Any, width: int, font_path: str
+    players: Any,
+    width: int,
+    font_path: str,
+    transparent_background: bool = False,
 ) -> Optional[Image.Image]:
     if not isinstance(players, list):
         return None
@@ -119,7 +132,11 @@ def _render_player_list_v01(
         if current_line:
             lines.append(current_line)
 
-    image = Image.new("RGB", (width, len(lines) * 24 + 20), BG_COLOR)
+    image = Image.new(
+        "RGBA" if transparent_background else "RGB",
+        (width, len(lines) * 24 + 20),
+        (0, 0, 0, 0) if transparent_background else BG_COLOR,
+    )
     draw = ImageDraw.Draw(image)
     y = 10
     for line in lines:
@@ -131,6 +148,48 @@ def _render_player_list_v01(
                 x += dummy.textlength(text, font=font)
         y += 24
     return image
+
+
+def _load_background(directory: str, size: tuple[int, int]) -> Image.Image:
+    """Choose a readable image from a directory and crop it without stretching."""
+    image_dir = Path(directory)
+    if not image_dir.is_dir():
+        raise NotADirectoryError(f"Background path is not a directory: {directory}")
+
+    supported_extensions = set(Image.registered_extensions())
+    candidates = [
+        path
+        for path in image_dir.iterdir()
+        if path.is_file() and path.suffix.lower() in supported_extensions
+    ]
+    random.shuffle(candidates)
+
+    background = None
+    for image_path in candidates:
+        try:
+            with Image.open(image_path) as source:
+                background = source.convert("RGBA")
+            break
+        except (OSError, ValueError):
+            continue
+
+    if background is None:
+        raise FileNotFoundError(f"No readable images found in background directory: {directory}")
+
+    canvas = Image.new("RGBA", background.size, (*BG_COLOR, 255))
+    canvas.alpha_composite(background)
+    background = canvas.convert("RGB")
+
+    width, height = size
+    scale = max(width / background.width, height / background.height)
+    resized_size = (
+        max(width, int(round(background.width * scale))),
+        max(height, int(round(background.height * scale))),
+    )
+    background = background.resize(resized_size, Image.Resampling.LANCZOS)
+    left = (background.width - width) // 2
+    top = (background.height - height) // 2
+    return background.crop((left, top, left + width, top + height))
 
 
 def _draw_title(image: Image.Image, font_path: str) -> None:

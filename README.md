@@ -100,8 +100,8 @@
 # 服务器列表
 MSC_SERVER_LIST='[]'
 
-# 延迟测试间隔(秒)
-MSC_LATENCY_INTERVAL=0.1
+# 同一服务器并发探测请求的启动间隔(秒)
+MSC_LATENCY_INTERVAL=0.2
 
 # 延迟测试预热次数
 MSC_LATENCY_WARMUP=2
@@ -123,6 +123,11 @@ MSC_COMMAND_TRIGGERS=["查服"]
 
 # 汇总图片是否显示服务器响应附带的玩家样例（不是完整名单；单服查询不受此项影响）
 MSC_SHOW_PLAYER_LIST=false
+
+# 自定义背景图片目录；每次随机选图。留空使用默认灰色背景；按 Pillow 可读取格式筛选
+# 常见格式：PNG、JPEG、WebP、BMP、GIF（首帧）、TIFF、ICO；尺寸比例不同会居中裁切，不拉伸
+# 示例：./data/minecraft-backgrounds
+MSC_BACKGROUND_PATH=
 ```
 
 ### 服务器列表配置示例
