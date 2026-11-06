@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nonebot-plugin-mcserver-status-check"
-version = "0.2.0-b2"
+version = "0.2.0-b3"
 description = "A vanilla-style, beautiful and efficient Minecraft server status query plugin"
 authors = ["leiuary <leiuary@qq.com>"]
 license = "MIT"
