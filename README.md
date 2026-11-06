@@ -20,7 +20,7 @@
 ### 🎨 效果图
 
 <div align="center">
-  <img src="readme.png" width="600" alt="效果图">
+  <img src="preview.png" width="600" alt="效果图">
 </div>
 
 ## 💿 安装
