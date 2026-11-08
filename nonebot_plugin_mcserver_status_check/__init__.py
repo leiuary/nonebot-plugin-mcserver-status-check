@@ -16,6 +16,7 @@ from nonebot.matcher import Matcher
 
 from nonebot_plugin_alconna import UniMessage
 
+from .address import is_valid_server_address
 from .config import Config
 from .checker import generate_mcmotd_image, generate_single_server_image
 
@@ -25,7 +26,7 @@ __plugin_meta__ = PluginMetadata(
     usage="\n".join([
         "指令:",
         "查服",
-        "查服 [IP/别名]",
+        "查服 [IP/域名/别名]",
         "查服列表"
     ]),
     type="application",
@@ -57,6 +58,12 @@ async def handle_mcmotd(args: Annotated[Message, CommandArg()]):
             if server.alias == arg_text:
                 target_address = server.address
                 break
+        else:
+            if not is_valid_server_address(arg_text):
+                await mcmotd.finish(
+                    "地址格式不正确，请输入 IP、域名或已配置的别名"
+                    "（可附加端口，如 example.org:25565）。"
+                )
         
         await mcmotd.send(f"正在查询服务器 {target_address}，请稍候...")
         
